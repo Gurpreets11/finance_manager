@@ -30,17 +30,13 @@
    <dependency>
      <groupId>org.postgresql</groupId>
      <artifactId>postgresql</artifactId>
-     <scope>runtime</scope>
+    
+     <version>42.7.3</version>
    </dependency>
    
    
 
- 		<dependency>
-    		<groupId>org.hibernate</groupId>
-    		<artifactId>hibernate-core</artifactId>
-    		<version>6.2.7.Final</version>
-		</dependency>
-		
+ 		 
    <dependency>
      <groupId>org.projectlombok</groupId>
      <artifactId>lombok</artifactId>
@@ -60,6 +56,23 @@
      <artifactId>jjwt-api</artifactId>
      <version>0.11.5</version>
    </dependency>
+   
+    <!-- JWT Runtime Impl -->
+    <dependency>
+        <groupId>io.jsonwebtoken</groupId>
+        <artifactId>jjwt-impl</artifactId>
+        <version>0.11.5</version>
+        <scope>runtime</scope>
+    </dependency>
+
+    <!-- JSON Support -->
+    <dependency>
+        <groupId>io.jsonwebtoken</groupId>
+        <artifactId>jjwt-jackson</artifactId>
+        <version>0.11.5</version>
+        <scope>runtime</scope>
+    </dependency>
+    
  </dependencies>
  <build>
    <plugins>

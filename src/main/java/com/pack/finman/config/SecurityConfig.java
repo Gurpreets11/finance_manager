@@ -33,7 +33,7 @@ public class SecurityConfig {
 	SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.csrf(c -> c.disable())
 				.authorizeHttpRequests(a -> a
-						.requestMatchers("/api/auth/**", "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**",
+						.requestMatchers("/api/v1/auth/**", "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**",
 								"/v3/api-docs/**", "/v1/api-docs/**", "/v1/swagger-ui/**", "/v1/swagger-ui/index.html")
 						.permitAll().anyRequest().authenticated())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

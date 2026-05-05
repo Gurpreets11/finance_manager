@@ -7,6 +7,9 @@ import com.pack.finman.repository.UserRepository;
 import com.pack.finman.security.JwtService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.Optional;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,7 +28,8 @@ public class AuthService {
 
     @Transactional
     public AuthResponse.TokenPair signup(AuthRequest.SignUp request) {
-        if (userRepository.existsByEmail(request.getEmail())) {
+    	Optional<User> userFetched = userRepository.findByEmail(request.getEmail());
+        if (userFetched.isPresent()) {
             throw new IllegalArgumentException("Email already registered: " + request.getEmail());
         }
 

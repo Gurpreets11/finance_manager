@@ -1,12 +1,18 @@
 package com.pack.finman.service.impl;
 
 import com.pack.finman.dto.request.LoanRequest;
+import com.pack.finman.entity.Investment;
 import com.pack.finman.entity.Loan;
 import com.pack.finman.entity.User;
 import com.pack.finman.exception.ResourceNotFoundException;
 import com.pack.finman.repository.LoanRepository;
 import lombok.RequiredArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,8 +23,31 @@ public class LoanService {
 
     private final LoanRepository loanRepository;
 
-    public Page<Loan> getAll(Long userId, Pageable pageable) {
-        return loanRepository.findByUserIdOrderByEmiDueDateAsc(userId, pageable);
+    public List<Loan> getAll(Long userId, Pageable pageable) {
+//    	Pageable pageable2 = PageRequest.of(0, 5);
+//    	return loanRepository.findByUserIdOrderByEmiDueDateAsc(userId, pageable2);
+//        return loanRepository.findByUserIdOrderByEmiDueDateAsc(userId, pageable);
+    	
+    	
+
+    	Pageable pageable2 = PageRequest.of(0, 5);
+
+//    	List<Loan> recentLoans =loanRepository
+//    	        .findByUserIdOrderByEmiDueDateAsc(userId, pageable2)
+//    	        .getContent();
+    	
+//    	return recentLoans;
+    	
+    	
+    	
+    	List<Loan> loanList = new ArrayList<Loan>(); 
+    	loanList = loanRepository.findByUserIdOrderByEmiDueDateAsc(userId);
+
+		 return  loanList;
+		 
+		 
+		 
+    	
     }
 
     public Loan getById(Long id, Long userId) {

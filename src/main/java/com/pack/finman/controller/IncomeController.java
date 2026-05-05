@@ -7,6 +7,9 @@ import com.pack.finman.entity.User;
 import com.pack.finman.service.impl.IncomeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,7 +27,7 @@ public class IncomeController {
 
     /** GET /api/v1/incomes?page=0&size=20 */
     @GetMapping
-    public ResponseEntity<ApiResponse<Page<Income>>> getAll(
+    public ResponseEntity<ApiResponse<List<Income>>> getAll(
             @AuthenticationPrincipal User currentUser,
             @RequestParam(defaultValue = "0")  int page,
             @RequestParam(defaultValue = "20") int size) {

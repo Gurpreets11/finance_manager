@@ -1,18 +1,22 @@
 package com.pack.finman.service.impl;
 
 import com.pack.finman.dto.request.InvestmentRequest;
+import com.pack.finman.entity.Expense;
 import com.pack.finman.entity.Investment;
 import com.pack.finman.entity.User;
 import com.pack.finman.exception.ResourceNotFoundException;
 import com.pack.finman.repository.InvestmentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -20,8 +24,28 @@ public class InvestmentService {
 
     private final InvestmentRepository investmentRepository;
 
-    public Page<Investment> getAll(Long userId, Pageable pageable) {
-        return investmentRepository.findByUserIdOrderByCurrentValueDesc(userId, pageable);
+    public List<Investment> getAll(Long userId, Pageable pageable) {
+//    	Pageable pageable2 = PageRequest.of(0, 5);
+//    	return investmentRepository.findByUserIdOrderByCurrentValueDesc(userId, pageable2);
+        //return investmentRepository.findByUserIdOrderByCurrentValueDesc(userId, pageable);
+    	
+    	Pageable pageable2 = PageRequest.of(0, 5);
+
+//    	List<Investment> recentInvestmentes =
+//    			investmentRepository
+//    	        .findByUserIdOrderByCurrentValueDesc(userId, pageable2)
+//    	        .getContent();
+    	
+//    	return recentInvestmentes;
+    	
+    	
+    	List<Investment> investmentList = new ArrayList<Investment>(); 
+    	investmentList = investmentRepository.findByUserIdOrderByCurrentValueDesc(userId);
+
+		 return  investmentList;
+		 
+		 
+		 
     }
 
     public Investment getById(Long id, Long userId) {

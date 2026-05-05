@@ -1,5 +1,6 @@
 package com.pack.finman.repository;
 
+import com.pack.finman.entity.Investment;
 import com.pack.finman.entity.Loan;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,7 +15,38 @@ import java.util.List;
 @Repository
 public interface LoanRepository extends JpaRepository<Loan, Long> {
 
-    Page<Loan> findByUserIdOrderByEmiDueDateAsc(Long userId, Pageable pageable);
+	
+	@Query("""
+	        SELECT l
+	        FROM Loan l
+	        WHERE l.user.id = :userId
+	        AND l.emiDueDate BETWEEN :startDate AND :endDate
+	        ORDER BY l.emiDueDate ASC
+	        """)
+	    List<Loan> findUpcomingPayments(
+	            Long userId,
+	            LocalDate startDate,
+	            LocalDate endDate);
+	
+	
+    //Page<Loan> findByUserIdOrderByEmiDueDateAsc(Long userId, Pageable pageable);
+    
+    
+	/*
+	 * @Query(value = """ SELECT l FROM Loan l WHERE l.user.id = :userId ORDER BY
+	 * l.emiDueDate ASC """, nativeQuery = true)
+	 */
+    
+	 @Query(value = """
+		        SELECT * FROM loans
+		        WHERE user_id = :userId
+		        ORDER BY emi_due_date DESC
+		        """, nativeQuery = true)
+    	List<Loan> findByUserIdOrderByEmiDueDateAsc( Long userId);
+ 
+    
+    
+//    List<Loan> findByUserIdOrderByEmiDueDateAsc(Long userId, Pageable pageable);
 
     // Loans with upcoming EMIs in the next N days
     List<Loan> findByUserIdAndEmiDueDateBetweenOrderByEmiDueDateAsc(

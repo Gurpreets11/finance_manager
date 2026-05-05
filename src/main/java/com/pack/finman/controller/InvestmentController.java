@@ -7,6 +7,9 @@ import com.pack.finman.entity.User;
 import com.pack.finman.service.impl.InvestmentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -22,7 +25,7 @@ public class InvestmentController {
     private final InvestmentService investmentService;
 
     @GetMapping
-    public ResponseEntity<ApiResponse<Page<Investment>>> getAll(
+    public ResponseEntity<ApiResponse<List<Investment>>> getAll(
             @AuthenticationPrincipal User currentUser,
             @RequestParam(defaultValue = "0")  int page,
             @RequestParam(defaultValue = "20") int size) {

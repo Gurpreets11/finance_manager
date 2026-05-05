@@ -2,11 +2,17 @@ package com.pack.finman.service.impl;
 
 import com.pack.finman.dto.request.ExpenseRequest;
 import com.pack.finman.entity.Expense;
+import com.pack.finman.entity.Income;
 import com.pack.finman.entity.User;
 import com.pack.finman.exception.ResourceNotFoundException;
 import com.pack.finman.repository.ExpenseRepository;
 import lombok.RequiredArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,8 +23,27 @@ public class ExpenseService {
 
     private final ExpenseRepository expenseRepository;
 
-    public Page<Expense> getAll(Long userId, Pageable pageable) {
-        return expenseRepository.findByUserIdOrderByTransactionDateDesc(userId, pageable);
+    public List<Expense> getAll(Long userId, Pageable pageable) {
+//    	Pageable pageable2 = PageRequest.of(0, 5);
+//    	return expenseRepository.findByUserIdOrderByTransactionDateDesc(userId, pageable2);
+        //return expenseRepository.findByUserIdOrderByTransactionDateDesc(userId, pageable);
+    	
+    	Pageable pageable2 = PageRequest.of(0, 5);
+
+//    	List<Expense> recentExpenses =
+//    	        expenseRepository
+//    	        .findByUserIdOrderByTransactionDateDesc(userId, pageable2)
+//    	        .getContent();
+    	
+//    	return recentExpenses;
+    	
+    	
+    	List<Expense> expenseList = new ArrayList<Expense>(); 
+    	expenseList = expenseRepository.findByUserIdOrderByTransactionDateDesc(userId);
+
+		 return  expenseList;
+		 
+		 
     }
 
     public Expense getById(Long id, Long userId) {

@@ -2,11 +2,21 @@ package com.pack.finman.service.impl;
 
 import com.pack.finman.dto.request.IncomeRequest;
 import com.pack.finman.entity.Income;
+import com.pack.finman.entity.Investment;
 import com.pack.finman.entity.User;
 import com.pack.finman.exception.ResourceNotFoundException;
 import com.pack.finman.repository.IncomeRepository;
+import com.pack.finman.repository.UserRepository;
+
 import lombok.RequiredArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,9 +26,45 @@ import org.springframework.transaction.annotation.Transactional;
 public class IncomeService {
 
     private final IncomeRepository incomeRepository;
+    
+    @Autowired
+    UserRepository userRepository;
 
-    public Page<Income> getAll(Long userId, Pageable pageable) {
-        return incomeRepository.findByUserIdOrderByTransactionDateDesc(userId, pageable);
+    public List<Income> getAll(Long userId, Pageable pageable) {
+    	//Pageable pageable2 = PageRequest.of(0, 5);
+		/*
+		 * List<Income> incomeList = new ArrayList<Income>(); Optional<User> user =
+		 * userRepository.findById(userId); if(user.isPresent()) { incomeList =
+		 * incomeRepository.findByUserIdOrderByTransactionDateDesc(user.get()); } return
+		 * incomeList;
+		 */
+        //return incomeRepository.findByUserIdOrderByTransactionDateDesc(userId, pageable);
+    	
+    	
+
+    	//Pageable pageable2 = PageRequest.of(0, 5);
+
+		/*
+		 * List<Income> recentIncomes = incomeRepository
+		 * .findByUserIdOrderByTransactionDateDesc(userId) .getContent();
+		 */
+    	
+    	
+    	
+//		List<Income> incomeList = new ArrayList<Income>(); 
+//		Optional<User> user = userRepository.findById(userId); 
+//		if(user.isPresent()) {
+//			 incomeList = incomeRepository.findByUserIdOrderByTransactionDateDesc(user.get().getId());
+//		} 
+		 
+		List<Income> incomeList = new ArrayList<Income>(); 
+		 incomeList = incomeRepository.findByUserIdOrderByTransactionDateDesc(userId);
+
+		 return  incomeList;
+		 
+    	
+    	//return recentIncomes;
+    	
     }
 
     public Income getById(Long id, Long userId) {

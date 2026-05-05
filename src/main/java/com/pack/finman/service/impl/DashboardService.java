@@ -7,7 +7,8 @@ import com.pack.finman.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
@@ -49,32 +50,96 @@ public class DashboardService {
         BigDecimal monthlyEmi        = nullSafe(loanRepository.sumMonthlyEmiByUserId(userId));
 
         // ── Recent Transactions ───────────────────────────────────────────────
-        List<RecentTransactionItem> recentIncomes = incomeRepository
-                .findTop5ByUserIdOrderByTransactionDateDesc(userId)
-                .stream()
-                .map(this::toRecentIncome)
-                .collect(Collectors.toList());
+		/*
+		 * List<RecentTransactionItem> recentIncomes = incomeRepository
+		 * .findTop5ByUserIdOrderByTransactionDateDesc(userId) .stream()
+		 * .map(this::toRecentIncome) .collect(Collectors.toList());
+		 * 
+		 * List<RecentTransactionItem> recentExpenses = expenseRepository
+		 * .findTop5ByUserIdOrderByTransactionDateDesc(userId) .stream()
+		 * .map(this::toRecentExpense) .collect(Collectors.toList());
+		 * 
+		 * // ── Top Investments ───────────────────────────────────────────────────
+		 * List<TopInvestmentItem> topInvestments = investmentRepository
+		 * .findTop3ByUserIdOrderByCurrentValueDesc(userId) .stream()
+		 * .map(this::toTopInvestment) .collect(Collectors.toList());
+		 * 
+		 * // ── Upcoming Payments (EMIs due in next 30 days) ──────────────────────
+		 * List<UpcomingPaymentItem> upcomingPayments = loanRepository
+		 * .findByUserIdAndEmiDueDateBetweenOrderByEmiDueDateAsc(userId, today,
+		 * today.plusDays(30)) .stream() .map(l -> toUpcomingPayment(l, today))
+		 * .collect(Collectors.toList());
+		 */
 
-        List<RecentTransactionItem> recentExpenses = expenseRepository
-                .findTop5ByUserIdOrderByTransactionDateDesc(userId)
-                .stream()
-                .map(this::toRecentExpense)
-                .collect(Collectors.toList());
+        
+        
+		/*
+		 * Pageable recentTxnPageable = PageRequest.of(0, 5);
+		 * 
+		 * List<RecentTransactionItem> recentIncomes = incomeRepository
+		 * .findByUserIdOrderByTransactionDateDesc(userId, recentTxnPageable)
+		 * .getContent() .stream() .map(this::toRecentIncome)
+		 * .collect(Collectors.toList());
+		 * 
+		 * List<RecentTransactionItem> recentExpenses = expenseRepository
+		 * .findByUserIdOrderByTransactionDateDesc(userId, recentTxnPageable)
+		 * .getContent() .stream() .map(this::toRecentExpense)
+		 * .collect(Collectors.toList());
+		 * 
+		 * // ── Top Investments ───────────────────────────────────────────────────
+		 * Pageable topInvestmentPageable = PageRequest.of(0, 3);
+		 * 
+		 * List<TopInvestmentItem> topInvestments = investmentRepository
+		 * .findByUserIdOrderByCurrentValueDesc(userId, topInvestmentPageable)
+		 * .getContent() .stream() .map(this::toTopInvestment)
+		 * .collect(Collectors.toList());
+		 * 
+		 * // ── Upcoming Payments (EMIs due in next 30 days) ──────────────────────
+		 * List<UpcomingPaymentItem> upcomingPayments = loanRepository
+		 * .findByUserIdAndEmiDueDateBetweenOrderByEmiDueDateAsc( userId, today,
+		 * today.plusDays(30) ) .stream() .map(l -> toUpcomingPayment(l, today))
+		 * .collect(Collectors.toList());
+		 */
+        
+        // =========================
+        // Recent Incomes
+        // =========================
+        List<RecentTransactionItem> recentIncomes =
+                incomeRepository.findRecentTop5(userId)
+                        .stream()
+                        .map(this::toRecentIncome)
+                        .toList();
 
-        // ── Top Investments ───────────────────────────────────────────────────
-        List<TopInvestmentItem> topInvestments = investmentRepository
-                .findTop3ByUserIdOrderByCurrentValueDesc(userId)
-                .stream()
-                .map(this::toTopInvestment)
-                .collect(Collectors.toList());
+        // =========================
+        // Recent Expenses
+        // =========================
+        List<RecentTransactionItem> recentExpenses =
+                expenseRepository.findRecentTop5(userId)
+                        .stream()
+                        .map(this::toRecentExpense)
+                        .toList();
 
-        // ── Upcoming Payments (EMIs due in next 30 days) ──────────────────────
-        List<UpcomingPaymentItem> upcomingPayments = loanRepository
-                .findByUserIdAndEmiDueDateBetweenOrderByEmiDueDateAsc(userId, today, today.plusDays(30))
-                .stream()
-                .map(l -> toUpcomingPayment(l, today))
-                .collect(Collectors.toList());
+        // =========================
+        // Top Investments
+        // =========================
+        List<TopInvestmentItem> topInvestments =
+                investmentRepository.findTop3Investments(userId)
+                        .stream()
+                        .map(this::toTopInvestment)
+                        .toList();
 
+        // =========================
+        // Upcoming Payments
+        // =========================
+        List<UpcomingPaymentItem> upcomingPayments =
+                loanRepository.findUpcomingPayments(
+                                userId,
+                                today,
+                                today.plusDays(30))
+                        .stream()
+                        .map(l -> toUpcomingPayment(l, today))
+                        .toList();
+        
         return DashboardSummaryResponse.builder()
                 .netWorth(netWorth)
                 .totalInvestments(totalInvestments)
